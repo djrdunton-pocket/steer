@@ -152,7 +152,7 @@ export default function Steer() {
         </div>
         <div style={{ display:"flex", alignItems:"center", gap:8, flexShrink:0 }}>
           <div className="tabs" style={{ display:"flex", gap:4, overflowX:"auto", maxWidth: isMobile?"62vw":"none" }}>
-            {[["portfolio","Portfolio"],["roadmap","Roadmap"],["onepage","Summary"],["budget", isMobile?"Budget":"Budget & Trade-offs"],["method","Method"]].map(([k,l]) => (
+            {[["portfolio","Portfolio"],["roadmap","Roadmap"],["onepage","Summary"],["budget", isMobile?"Budget":"Budget & Trade-offs"],["method","Method"],["process","Process"]].map(([k,l]) => (
               <button key={k} className="tab" onClick={()=>setView(k)}
                 style={{ border:"none", borderBottom: view===k?`2px solid ${C.accent}`:"2px solid transparent",
                   background:"transparent", color: view===k?C.ink:C.slate,
@@ -187,6 +187,7 @@ export default function Steer() {
         {view==="onepage"   && <OnePage items={phased} envelope={envelope} allocated={allocated} fundedTotal={fundedTotal} isMobile={isMobile} onPrint={()=>window.print()} />}
         {view==="budget"    && <Budget items={withCumulative} envelope={envelope} />}
         {view==="method"    && <Method />}
+        {view==="process"   && <Process setView={setView} />}
       </div>
 
       {(editing || adding) &&
@@ -478,6 +479,52 @@ function Method() {
     </div>
   );
 }
+/* ---------- Process / governance ---------- */
+function Process({ setView }) {
+  const setup = [
+    ["Discovery (1:1s)",  "Capture every initiative, owner and cost from each sponsor and workstream lead.",         "Add initiatives →", "portfolio"],
+    ["Scoring workshop",  "Score each initiative on value vs effort, together, so definitions are applied consistently.", "Score now →",       "portfolio"],
+    ["ExCo trade-offs",   "Set the budget and agree the funding line. Trade-offs become a conversation, not an argument.", "Open budget →",     "budget"],
+    ["Roadmap review",    "Sequence the funded work across the years, respecting dependencies and capacity.",          "View roadmap →",    "roadmap"],
+  ];
+  const cadence = [
+    ["Monthly",   "Track delivery status, surface risks and catch slippage early."],
+    ["Quarterly", "Re-score new demand and re-baseline the portfolio against priorities."],
+    ["Annually",  "Reset the budget and refresh the strategy the portfolio serves."],
+  ];
+  return (
+    <div>
+      <SectionHead title="Process" desc="How Steer is run: a one-off set-up to stand the portfolio up, then a steady governance cadence that keeps it honest. Scoring is done with stakeholders, while ExCo owns the trade-offs." />
+
+      <Sub>Setting up the portfolio</Sub>
+      <div className="m-grid" style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:16, marginBottom:28 }}>
+        {setup.map(([t,d,link,target], idx)=>(
+          <div key={t} style={{ background:C.white, border:`1px solid ${C.line}`, borderRadius:12, padding:"20px 22px", display:"flex", flexDirection:"column" }}>
+            <div className="mono" style={{ width:30, height:30, borderRadius:"50%", background:C.accentSoft, color:C.accent, fontSize:13, fontWeight:600, display:"flex", alignItems:"center", justifyContent:"center", marginBottom:14 }}>{idx+1}</div>
+            <div style={{ fontSize:14, fontWeight:700, marginBottom:8 }}>{t}</div>
+            <p style={{ fontSize:13, color:C.slate, lineHeight:1.6, margin:"0 0 16px", flex:1 }}>{d}</p>
+            <button onClick={()=>setView(target)} className="tab" style={processLink}>{link}</button>
+          </div>
+        ))}
+      </div>
+
+      <Sub>Ongoing governance cadence</Sub>
+      <div className="m-grid" style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:16, marginBottom:16 }}>
+        {cadence.map(([t,d])=>(
+          <Card key={t} title={t}><p style={{ ...cardP, margin:0 }}>{d}</p></Card>
+        ))}
+      </div>
+
+      <div style={{ background:C.white, border:`1px solid ${C.line}`, borderRadius:12, padding:"16px 20px", marginBottom:16 }}>
+        <p style={{ fontSize:13, color:C.slate, lineHeight:1.6, margin:0 }}>New demand and changing priorities feed back into scoring each quarter.</p>
+      </div>
+
+      <p style={{ fontSize:12, color:C.mute, lineHeight:1.6, margin:0 }}>Scored with stakeholders, owned by ExCo, facilitated by the portfolio lead.</p>
+    </div>
+  );
+}
+const processLink = { border:"none", background:"transparent", color:C.accent, padding:0, fontSize:13, fontWeight:600, textAlign:"left", alignSelf:"flex-start" };
+
 const cardP = { fontSize:13, color:C.slate, lineHeight:1.65, margin:"0 0 14px" };
 function Card({ title, children }) {
   return (
