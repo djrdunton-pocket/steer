@@ -70,7 +70,7 @@ const priority = (i) => value(i) / i.ef;              // WSJF-style: value per u
 const duration = (i) => (i.ef >= 5 ? 3 : i.ef >= 3 ? 2 : 1);
 
 export default function Steer() {
-  const [stage, setStage] = useState("landing"); // landing | login | app
+  const [stage, setStage] = useState("intro"); // intro | app
   const isMobile = useIsMobile();
   const [items, setItems] = useState(SEED);
   const [view, setView] = useState("portfolio");
@@ -116,8 +116,7 @@ export default function Steer() {
   const add = (it) =>
     setItems((p) => [...p, { ...it, id: Math.max(0, ...p.map(x=>x.id)) + 1 }]);
 
-  if (stage === "landing") return <Landing onEnter={() => setStage("login")} />;
-  if (stage === "login")   return <Login onAuth={() => setStage("app")} onBack={() => setStage("landing")} />;
+  if (stage === "intro") return <Intro onEnter={() => setStage("app")} />;
 
   return (
     <>
@@ -150,13 +149,6 @@ export default function Steer() {
             <Compass />
             <span style={{ fontSize:21, fontWeight:700, letterSpacing:"-0.02em" }}>Steer</span>
           </div>
-          {!isMobile && <>
-            <span style={{ color:C.line }}>|</span>
-            <span style={{ fontSize:13, color:C.slate, whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis", display:"flex", alignItems:"center", gap:6 }}>
-              Digital Foundations Portfolio
-              <span style={{ fontSize:11, color:C.mute, background:C.bg, border:`1px solid ${C.line}`, borderRadius:5, padding:"1px 6px" }}>Workspace ▾</span>
-            </span>
-          </>}
         </div>
         <div style={{ display:"flex", alignItems:"center", gap:8, flexShrink:0 }}>
           <div className="tabs" style={{ display:"flex", gap:4, overflowX:"auto", maxWidth: isMobile?"62vw":"none" }}>
@@ -170,12 +162,6 @@ export default function Steer() {
               </button>
             ))}
           </div>
-          {!isMobile && (
-            <div style={{ display:"flex", alignItems:"center", gap:8, paddingLeft:8, borderLeft:`1px solid ${C.line}` }}>
-              <div style={{ width:30, height:30, borderRadius:"50%", background:C.accentSoft, color:C.accent, display:"flex", alignItems:"center", justifyContent:"center", fontSize:12, fontWeight:700 }}>DD</div>
-              <button onClick={()=>setStage("landing")} title="Sign out" style={{ border:"none", background:"transparent", color:C.mute, fontSize:12 }}>Sign out</button>
-            </div>
-          )}
         </div>
       </div>
 
@@ -217,8 +203,6 @@ export default function Steer() {
         <div style={{ display:"flex", alignItems:"center", gap:9 }}>
           <Compass />
           <span style={{ fontSize:20, fontWeight:700 }}>Steer</span>
-          <span style={{ color:C.line }}>|</span>
-          <span style={{ fontSize:13, color:C.slate }}>Digital Foundations Portfolio</span>
         </div>
         <span style={{ fontSize:11, color:C.mute }}>{new Date().toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"})}</span>
       </div>
@@ -551,217 +535,43 @@ function Editor({ item, onSave, onClose }) {
   );
 }
 
-/* ---------- Landing page ---------- */
-function Landing({ onEnter }) {
-  const features = [
-    ["Score what matters", "Rank every initiative on strategic impact, time-criticality and enablement against the effort to deliver. A transparent, defensible model, not a black box."],
-    ["See the funding line", "Set your budget and watch initiatives fall above or below the line as priorities and costs shift. Trade-offs become a conversation, not an argument."],
-    ["Phase the roadmap", "Turn an approved budget into a sequenced, multi-year investment roadmap that keeps annual spend in check and lands enablers first."],
-    ["Report in one page", "Generate a board-ready summary and PDF in seconds, so leadership always knows what's funded, what's at risk and why."],
-  ];
-  const steps = [
-    ["01", "Capture demand", "Bring every competing initiative into one place, each with an owner and a cost."],
-    ["02", "Prioritise on evidence", "Score on value and effort. The portfolio ranks itself by return, not by who shouts loudest."],
-    ["03", "Decide and phase", "Set the budget, draw the funding line, and phase the funded work across the years."],
-    ["04", "Report and adjust", "Share the one-page summary with leadership and re-plan as evidence and priorities change."],
-  ];
+
+/* ---------- Intro splash ---------- */
+function Intro({ onEnter }) {
   return (
-    <div style={{ fontFamily:"'IBM Plex Sans', sans-serif", color:C.ink, background:C.white }}>
+    <div style={{ fontFamily:"'IBM Plex Sans', sans-serif", color:C.ink, background:C.bg, minHeight:"100vh", display:"flex", alignItems:"center", justifyContent:"center", padding:24 }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
         * { box-sizing:border-box; }
-        .ld-mono { font-family:'IBM Plex Mono', monospace; }
-        .ld-cta:hover { background:#0b5e57 !important; }
-        .ld-ghost:hover { background:${C.bg} !important; }
-        .ld-feat { transition:transform .15s, box-shadow .15s; }
-        .ld-feat:hover { transform:translateY(-3px); box-shadow:0 12px 30px rgba(15,23,42,0.08); }
-        .ld-grid2 { grid-template-columns:1fr 1fr; }
-        .ld-grid4 { grid-template-columns:repeat(4,1fr); }
-        @media (max-width:820px){ .ld-grid2,.ld-grid4{ grid-template-columns:1fr !important; } .ld-hero-h{ font-size:38px !important; } .ld-nav-links{ display:none !important; } }
+        .in-mono { font-family:'IBM Plex Mono', monospace; }
+        .in-cta:hover { background:#0b5e57 !important; }
       `}</style>
 
-      {/* nav */}
-      <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"18px 28px", maxWidth:1180, margin:"0 auto" }}>
-        <div style={{ display:"flex", alignItems:"center", gap:9 }}>
-          <Compass /><span style={{ fontSize:21, fontWeight:700, letterSpacing:"-0.02em" }}>Steer</span>
+      <div style={{ width:560, maxWidth:"100%", textAlign:"center" }}>
+        <div style={{ display:"inline-flex", alignItems:"center", gap:11, marginBottom:24 }}>
+          <Compass />
+          <span style={{ fontSize:30, fontWeight:700, letterSpacing:"-0.02em" }}>Steer</span>
         </div>
-        <div className="ld-nav-links" style={{ display:"flex", alignItems:"center", gap:28, fontSize:13.5, color:C.slate }}>
-          <span style={{ cursor:"pointer" }}>How it works</span>
-          <span style={{ cursor:"pointer" }}>Features</span>
-          <span style={{ cursor:"pointer" }}>Pricing</span>
-        </div>
-        <div style={{ display:"flex", alignItems:"center", gap:10 }}>
-          <button onClick={onEnter} className="ld-ghost" style={{ border:`1px solid ${C.line}`, background:C.white, color:C.ink, padding:"9px 16px", borderRadius:8, fontSize:13, fontWeight:600 }}>Sign in</button>
-          <button onClick={onEnter} className="ld-cta" style={{ border:"none", background:C.accent, color:C.white, padding:"9px 18px", borderRadius:8, fontSize:13, fontWeight:600 }}>Try the demo</button>
-        </div>
-      </div>
 
-      {/* hero */}
-      <div style={{ maxWidth:1180, margin:"0 auto", padding:"64px 28px 56px", textAlign:"center" }}>
-        <div style={{ display:"inline-flex", alignItems:"center", gap:8, background:C.accentSoft, color:C.accent, padding:"6px 14px", borderRadius:20, fontSize:12.5, fontWeight:600, marginBottom:26 }}>
-          <span style={{ width:6, height:6, borderRadius:"50%", background:C.accent }} /> Portfolio prioritisation for complex change
-        </div>
-        <h1 className="ld-hero-h" style={{ fontSize:56, fontWeight:700, letterSpacing:"-0.03em", lineHeight:1.08, margin:"0 auto 22px", maxWidth:820 }}>
-          Turn competing priorities into a portfolio your board can sign off.
+        <h1 style={{ fontSize:28, fontWeight:700, letterSpacing:"-0.02em", lineHeight:1.25, margin:"0 0 16px" }}>
+          Prioritise initiatives on value vs. effort.
         </h1>
-        <p style={{ fontSize:18, color:C.slate, lineHeight:1.6, maxWidth:620, margin:"0 auto 32px" }}>
-          Steer helps delivery and transformation leaders prioritise initiatives on evidence, allocate a fixed budget with confidence, and phase a multi-year roadmap, all in one place.
+        <p style={{ fontSize:15, color:C.slate, lineHeight:1.65, margin:"0 auto 28px", maxWidth:460 }}>
+          Score each initiative on strategic impact, time-criticality and enablement,
+          weigh it against effort, then set a budget to see what's funded and how it phases across five years.
         </p>
-        <div style={{ display:"flex", gap:12, justifyContent:"center", flexWrap:"wrap" }}>
-          <button onClick={onEnter} className="ld-cta" style={{ border:"none", background:C.accent, color:C.white, padding:"13px 26px", borderRadius:10, fontSize:15, fontWeight:600 }}>Try the live demo</button>
-          <button onClick={onEnter} className="ld-ghost" style={{ border:`1px solid ${C.line}`, background:C.white, color:C.ink, padding:"13px 26px", borderRadius:10, fontSize:15, fontWeight:600 }}>See how it works</button>
-        </div>
-        <p style={{ fontSize:12.5, color:C.mute, marginTop:18 }}>No setup required · Works for any portfolio · Built for boards</p>
-      </div>
 
-      {/* trust strip */}
-      <div style={{ borderTop:`1px solid ${C.line}`, borderBottom:`1px solid ${C.line}`, background:C.bg }}>
-        <div style={{ maxWidth:1180, margin:"0 auto", padding:"22px 28px", display:"flex", gap:36, justifyContent:"center", flexWrap:"wrap", fontSize:13, color:C.slate }}>
-          <span>Used across <strong style={{color:C.ink}}>financial services</strong></span>
-          <span><strong style={{color:C.ink}}>healthcare</strong></span>
-          <span><strong style={{color:C.ink}}>higher education</strong></span>
-          <span><strong style={{color:C.ink}}>government</strong></span>
-          <span>and <strong style={{color:C.ink}}>large enterprise</strong></span>
-        </div>
-      </div>
-
-      {/* features */}
-      <div style={{ maxWidth:1180, margin:"0 auto", padding:"64px 28px 32px" }}>
-        <div style={{ textAlign:"center", marginBottom:44 }}>
-          <h2 style={{ fontSize:32, fontWeight:700, letterSpacing:"-0.02em", margin:"0 0 12px" }}>Everything you need to steer a portfolio</h2>
-          <p style={{ fontSize:16, color:C.slate, maxWidth:560, margin:"0 auto" }}>From scattered, competing demands to a clear, funded, defensible plan.</p>
-        </div>
-        <div className="ld-grid2" style={{ display:"grid", gap:20 }}>
-          {features.map(([t,d],i)=>(
-            <div key={i} className="ld-feat" style={{ background:C.white, border:`1px solid ${C.line}`, borderRadius:14, padding:"26px 26px" }}>
-              <div style={{ width:38, height:38, borderRadius:9, background:C.accentSoft, display:"flex", alignItems:"center", justifyContent:"center", marginBottom:16 }}>
-                <span className="ld-mono" style={{ color:C.accent, fontWeight:600, fontSize:15 }}>{i+1}</span>
-              </div>
-              <h3 style={{ fontSize:17, fontWeight:700, margin:"0 0 8px" }}>{t}</h3>
-              <p style={{ fontSize:14, color:C.slate, lineHeight:1.6, margin:0 }}>{d}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* how it works */}
-      <div style={{ background:C.ink, color:C.white, marginTop:48 }}>
-        <div style={{ maxWidth:1180, margin:"0 auto", padding:"64px 28px" }}>
-          <div style={{ textAlign:"center", marginBottom:44 }}>
-            <h2 style={{ fontSize:32, fontWeight:700, letterSpacing:"-0.02em", margin:"0 0 12px" }}>How it works</h2>
-            <p style={{ fontSize:16, color:"#94A3B8", maxWidth:560, margin:"0 auto" }}>Four steps from competing demands to a board-ready plan.</p>
-          </div>
-          <div className="ld-grid4" style={{ display:"grid", gap:20 }}>
-            {steps.map(([n,t,d])=>(
-              <div key={n} style={{ borderTop:`2px solid ${C.accent}`, paddingTop:18 }}>
-                <div className="ld-mono" style={{ fontSize:13, color:C.accent, fontWeight:600, marginBottom:10 }}>{n}</div>
-                <h3 style={{ fontSize:16, fontWeight:700, margin:"0 0 8px" }}>{t}</h3>
-                <p style={{ fontSize:13.5, color:"#94A3B8", lineHeight:1.6, margin:0 }}>{d}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* CTA */}
-      <div style={{ maxWidth:1180, margin:"0 auto", padding:"72px 28px", textAlign:"center" }}>
-        <h2 style={{ fontSize:34, fontWeight:700, letterSpacing:"-0.02em", margin:"0 0 16px" }}>Stop arguing over priorities. Start steering.</h2>
-        <p style={{ fontSize:17, color:C.slate, maxWidth:540, margin:"0 auto 30px" }}>See your whole portfolio prioritised, funded and phased in minutes.</p>
-        <button onClick={onEnter} className="ld-cta" style={{ border:"none", background:C.accent, color:C.white, padding:"14px 32px", borderRadius:10, fontSize:16, fontWeight:600 }}>Try the live demo</button>
-      </div>
-
-      {/* footer */}
-      <div style={{ borderTop:`1px solid ${C.line}`, background:C.bg }}>
-        <div style={{ maxWidth:1180, margin:"0 auto", padding:"26px 28px", display:"flex", justifyContent:"space-between", alignItems:"center", flexWrap:"wrap", gap:12, fontSize:13, color:C.mute }}>
-          <div style={{ display:"flex", alignItems:"center", gap:8 }}>
-            <Compass /><span style={{ fontWeight:700, color:C.ink }}>Steer</span>
-          </div>
-          <span>© {new Date().getFullYear()} Steer. All rights reserved.</span>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-/* ---------- Login gate ---------- */
-function Login({ onAuth, onBack }) {
-  const [email, setEmail] = useState("hello@danieldunton.com");
-  const [pw, setPw] = useState("demo1234");
-  const [busy, setBusy] = useState(false);
-  const go = () => { if (busy) return; setBusy(true); setTimeout(() => onAuth(), 500); };
-  return (
-    <div style={{ fontFamily:"'IBM Plex Sans', sans-serif", minHeight:"100vh", display:"flex", background:C.bg }}>
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
-        * { box-sizing:border-box; }
-        .li-in:focus { outline:none; border-color:${C.accent} !important; box-shadow:0 0 0 3px ${C.accentSoft}; }
-        .li-btn:hover { background:#0b5e57 !important; }
-        .li-sso:hover { background:${C.bg} !important; }
-        @keyframes spin { to { transform:rotate(360deg); } }
-        @media (max-width:760px) { .li-brand { display:none !important; } }
-      `}</style>
-
-      {/* left brand panel (hidden on small) */}
-      <div className="li-brand" style={{ flex:1, background:C.ink, color:C.white, padding:"56px 52px", display:"flex", flexDirection:"column", justifyContent:"space-between", position:"relative", overflow:"hidden" }}>
-        <div style={{ position:"absolute", right:-80, top:-80, width:320, height:320, borderRadius:"50%", border:`1px solid #1e293b` }} />
-        <div style={{ position:"absolute", right:-30, top:-30, width:220, height:220, borderRadius:"50%", border:`1px solid #1e293b` }} />
-        <div onClick={onBack} style={{ display:"flex", alignItems:"center", gap:10, position:"relative", cursor:"pointer" }}>
-          <svg width="30" height="30" viewBox="0 0 26 26" fill="none">
-            <circle cx="13" cy="13" r="11" stroke={C.accent} strokeWidth="2"/>
-            <path d="M13 5 L16 13 L13 21 L10 13 Z" fill={C.accent}/>
-            <circle cx="13" cy="13" r="1.6" fill={C.white}/>
-          </svg>
-          <span style={{ fontSize:24, fontWeight:700, letterSpacing:"-0.02em" }}>Steer</span>
-        </div>
-        <div style={{ position:"relative" }}>
-          <div style={{ fontSize:30, fontWeight:700, lineHeight:1.25, letterSpacing:"-0.02em", maxWidth:420 }}>
-            Turn competing priorities into a portfolio your board can sign off.
-          </div>
-          <p style={{ fontSize:14, color:"#94A3B8", marginTop:16, maxWidth:400, lineHeight:1.6 }}>
-            Evidence-based prioritisation, phasing and budget allocation for complex transformation programmes.
-          </p>
-        </div>
-        <div style={{ fontSize:12, color:"#64748B", position:"relative" }}>
-          Enterprise SSO · SOC 2 aligned · UK data residency
-        </div>
-      </div>
-
-      {/* right form */}
-      <div style={{ width:440, maxWidth:"100%", background:C.white, padding:"56px 44px", display:"flex", flexDirection:"column", justifyContent:"center", borderLeft:`1px solid ${C.line}` }}>
-        <h1 style={{ fontSize:22, fontWeight:700, margin:"0 0 4px" }}>Sign in</h1>
-        <p style={{ fontSize:13, color:C.slate, margin:"0 0 28px" }}>Access your portfolio workspace</p>
-
-        <button className="li-sso" onClick={go}
-          style={{ width:"100%", border:`1px solid ${C.line}`, background:C.white, color:C.ink, padding:"11px", borderRadius:9, fontSize:13.5, fontWeight:600, display:"flex", alignItems:"center", justifyContent:"center", gap:9, marginBottom:18 }}>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 2L3 6v6c0 5 3.5 8.5 9 10 5.5-1.5 9-5 9-10V6l-9-4z" stroke={C.accent} strokeWidth="1.8" strokeLinejoin="round"/></svg>
-          Continue with SSO
-        </button>
-
-        <div style={{ display:"flex", alignItems:"center", gap:12, margin:"4px 0 18px", color:C.mute, fontSize:11 }}>
-          <div style={{ flex:1, height:1, background:C.line }} /> OR <div style={{ flex:1, height:1, background:C.line }} />
+        <div className="in-mono" style={{ display:"inline-block", background:C.white, border:`1px solid ${C.line}`, borderRadius:10, padding:"14px 20px", fontSize:14, color:C.slate, marginBottom:30 }}>
+          Priority = <span style={{ color:C.accent, fontWeight:600 }}>(Impact + Time-criticality + Enablement)</span> ÷ <span style={{ color:C.red, fontWeight:600 }}>Effort</span>
         </div>
 
-        <label style={{ fontSize:12, fontWeight:500, color:C.slate, display:"block", marginBottom:5 }}>Work email</label>
-        <input className="li-in" value={email} onChange={e=>setEmail(e.target.value)} onKeyDown={e=>e.key==="Enter"&&go()}
-          style={{ width:"100%", border:`1px solid ${C.line}`, borderRadius:9, padding:"11px 12px", fontSize:13.5, marginBottom:14, transition:"all .15s" }} />
-
-        <label style={{ fontSize:12, fontWeight:500, color:C.slate, display:"block", marginBottom:5 }}>Password</label>
-        <input className="li-in" type="password" value={pw} onChange={e=>setPw(e.target.value)} onKeyDown={e=>e.key==="Enter"&&go()}
-          style={{ width:"100%", border:`1px solid ${C.line}`, borderRadius:9, padding:"11px 12px", fontSize:13.5, marginBottom:8, transition:"all .15s" }} />
-
-        <div style={{ textAlign:"right", marginBottom:18 }}>
-          <span style={{ fontSize:12, color:C.accent, cursor:"pointer" }}>Forgot password?</span>
+        <div>
+          <button onClick={onEnter} className="in-cta"
+            style={{ border:"none", background:C.accent, color:C.white, padding:"13px 32px", borderRadius:10, fontSize:15, fontWeight:600 }}>
+            Enter
+          </button>
         </div>
-
-        <button className="li-btn" onClick={go} disabled={busy}
-          style={{ width:"100%", border:"none", background:C.accent, color:C.white, padding:"12px", borderRadius:9, fontSize:14, fontWeight:600, display:"flex", alignItems:"center", justifyContent:"center", gap:9, transition:"all .15s" }}>
-          {busy && <span style={{ width:14, height:14, border:"2px solid rgba(255,255,255,0.4)", borderTopColor:"#fff", borderRadius:"50%", animation:"spin .6s linear infinite" }} />}
-          {busy ? "Signing in…" : "Sign in"}
-        </button>
-
-        <p style={{ fontSize:11, color:C.mute, textAlign:"center", marginTop:24, lineHeight:1.6 }}>
-          Protected by enterprise-grade authentication.<br/>Sessions are encrypted end-to-end.
-        </p>
+        <p style={{ fontSize:12, color:C.mute, marginTop:18 }}>Sample portfolio · figures are illustrative</p>
       </div>
     </div>
   );
