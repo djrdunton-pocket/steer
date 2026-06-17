@@ -109,7 +109,11 @@ Each initiative object:
 - `si/tc/en/ef` are integers 1–5.
 
 `YEARS = ["2026/27","2027/28","2028/29","2029/30","2030/31"]` (5-year programme).
-Seed is a 12-initiative University of Bath digital portfolio.
+Seed is a 12-initiative INDICATIVE university portfolio (Student Records, Online Admissions, VLE,
+Research Computing/Data, HR & Finance, IAM, Student App, Timetabling, Network & Wifi, Data Warehouse,
+Cyber Security). Total demand ~£42m against the £30m default budget, so the funding line always bites
+and trade-offs are visible on load. Clearly illustrative, not a real Bath plan (intro/footer says so).
+Tuned for the Bath Digital Portfolio Director interview demo (22 Jun 2026).
 
 ---
 
@@ -122,13 +126,16 @@ Seed is a 12-initiative University of Bath digital portfolio.
   - ink `#0F172A`, slate `#475569`, mute `#94A3B8`, line `#E2E8F0`, bg `#F8FAFC`, white `#FFFFFF`
   - accent (teal-700) `#0F766E`, accentSoft `#CCFBF1`
   - RAG: green `#15803D`, amber `#B45309`, red `#B91C1C` (+ soft: `#DCFCE7`, `#FEF3C7`, `#FEE2E2`)
-- **Workstream colours (`WORKSTREAMS`):** Research `#0F766E`, Education Technology `#1D4ED8`,
-  Student Experience `#7C3AED`, Staff Experience `#BE185D`, Infrastructure `#475569`.
+- **Workstream colours (`WORKSTREAMS`):** Student Systems `#0891B2`, Education Technology `#1D4ED8`,
+  Student Experience `#7C3AED`, Research `#0F766E`, Data `#C2410C`, Staff Experience `#BE185D`,
+  Infrastructure `#475569`.
 - **Logo:** compass SVG + "Steer" wordmark.
 
-### Views (5 tabs)
-Portfolio · Roadmap · Summary · Budget & Trade-offs · Method.
-Flow: Landing → Login (cosmetic, accepts anything) → App. "Sign out" returns to Landing.
+### Views (6 tabs)
+Portfolio · Roadmap · Summary · Budget & Trade-offs · Method · Process.
+Flow: Intro splash (single "Enter" button) → App. The current build has NO marketing landing page and
+NO login screen (both were removed in favour of a clean demo entry). Process tab covers the governance
+cadence (setup sequence + monthly/quarterly/annual rhythm).
 Summary has a Download PDF button (print-to-PDF of Summary + Roadmap via a hidden `.print-area`).
 
 ---

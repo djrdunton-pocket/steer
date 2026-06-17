@@ -33,9 +33,11 @@ const C = {
 };
 
 const WORKSTREAMS = {
-  "Research":             "#0F766E",
+  "Student Systems":      "#0891B2",
   "Education Technology": "#1D4ED8",
   "Student Experience":   "#7C3AED",
+  "Research":             "#0F766E",
+  "Data":                 "#C2410C",
   "Staff Experience":     "#BE185D",
   "Infrastructure":       "#475569",
 };
@@ -50,18 +52,18 @@ const STATUS = {
 const YEARS = ["2026/27", "2027/28", "2028/29", "2029/30", "2030/31"];
 
 const SEED = [
-  { id:1,  name:"Identity & Access Management (SSO)", ws:"Infrastructure",      owner:"D. Patel",   si:4, tc:4, en:5, ef:3, cost:1.8, status:"in-progress" },
-  { id:2,  name:"Network Infrastructure Modernisation", ws:"Infrastructure",    owner:"D. Patel",   si:5, tc:4, en:5, ef:5, cost:4.2, status:"in-progress" },
-  { id:3,  name:"Cybersecurity Uplift Programme", ws:"Infrastructure",          owner:"S. Owen",    si:4, tc:5, en:2, ef:3, cost:2.2, status:"at-risk" },
-  { id:4,  name:"Student Portal & Mobile App", ws:"Student Experience",         owner:"L. Reid",    si:5, tc:3, en:3, ef:3, cost:2.5, status:"not-started" },
-  { id:5,  name:"Virtual Learning Environment Refresh", ws:"Education Technology", owner:"M. Cole", si:4, tc:3, en:2, ef:4, cost:3.0, status:"not-started" },
-  { id:6,  name:"Research Computing Cluster Upgrade", ws:"Research",            owner:"A. Frost",   si:4, tc:3, en:3, ef:4, cost:3.5, status:"not-started" },
-  { id:7,  name:"Cloud Migration Programme", ws:"Infrastructure",               owner:"D. Patel",   si:3, tc:3, en:4, ef:4, cost:2.8, status:"not-started" },
-  { id:8,  name:"Data & Analytics Platform", ws:"Infrastructure",               owner:"R. Singh",   si:4, tc:2, en:4, ef:3, cost:2.0, status:"not-started" },
-  { id:9,  name:"Staff HR & Finance Platform", ws:"Staff Experience",           owner:"J. Hart",    si:3, tc:2, en:2, ef:5, cost:3.2, status:"not-started" },
-  { id:10, name:"Timetabling System Replacement", ws:"Student Experience",      owner:"L. Reid",    si:3, tc:3, en:2, ef:2, cost:1.5, status:"not-started" },
-  { id:11, name:"Student Recruitment CRM", ws:"Student Experience",             owner:"K. Adeyemi", si:3, tc:2, en:2, ef:2, cost:1.8, status:"not-started" },
-  { id:12, name:"Infosys Managed Service Transition", ws:"Infrastructure",      owner:"S. Owen",    si:2, tc:3, en:3, ef:2, cost:1.5, status:"in-progress" },
+  { id:1,  name:"Student Records System Replacement", ws:"Student Systems",       owner:"L. Reid",    si:5, tc:4, en:4, ef:5, cost:7.5, status:"not-started" },
+  { id:2,  name:"Online Admissions & Enrolment", ws:"Student Systems",            owner:"K. Adeyemi", si:4, tc:5, en:3, ef:3, cost:3.0, status:"not-started" },
+  { id:3,  name:"Virtual Learning Environment Upgrade", ws:"Education Technology", owner:"M. Cole",    si:4, tc:3, en:3, ef:3, cost:3.5, status:"not-started" },
+  { id:4,  name:"Research Computing Platform", ws:"Research",                     owner:"A. Frost",   si:4, tc:3, en:4, ef:4, cost:4.5, status:"not-started" },
+  { id:5,  name:"Research Data Management", ws:"Research",                        owner:"A. Frost",   si:3, tc:4, en:3, ef:2, cost:1.5, status:"not-started" },
+  { id:6,  name:"HR & Finance System Replacement", ws:"Staff Experience",         owner:"J. Hart",    si:3, tc:2, en:3, ef:5, cost:6.5, status:"not-started" },
+  { id:7,  name:"Identity & Access Management", ws:"Infrastructure",              owner:"D. Patel",   si:4, tc:4, en:5, ef:3, cost:2.2, status:"in-progress" },
+  { id:8,  name:"Student App & Digital Campus", ws:"Student Experience",          owner:"L. Reid",    si:4, tc:3, en:3, ef:3, cost:2.8, status:"not-started" },
+  { id:9,  name:"Timetabling Modernisation", ws:"Student Experience",            owner:"S. Khan",    si:3, tc:3, en:2, ef:2, cost:1.6, status:"not-started" },
+  { id:10, name:"Network & Wifi Upgrade", ws:"Infrastructure",                    owner:"D. Patel",   si:4, tc:4, en:5, ef:4, cost:4.0, status:"in-progress" },
+  { id:11, name:"Data Warehouse & Analytics Platform", ws:"Data",                 owner:"R. Singh",   si:4, tc:2, en:4, ef:3, cost:2.5, status:"not-started" },
+  { id:12, name:"Cyber Security Uplift", ws:"Infrastructure",                     owner:"S. Owen",    si:4, tc:5, en:2, ef:3, cost:2.4, status:"at-risk" },
 ];
 
 const fmt = (m) => "£" + m.toFixed(1) + "m";
@@ -251,7 +253,7 @@ function Portfolio({ items, update, remove, setEditing, setAdding }) {
                   <Td><Pill color={WORKSTREAMS[i.ws]}>{i.ws}</Pill></Td>
                   <ScoreCell v={i.si} onChange={(v)=>update(i.id,{si:v})} />
                   <ScoreCell v={i.tc} onChange={(v)=>update(i.id,{tc:v})} />
-                  <ScoreCell v={i.en} onChange={(v)=>update(i.id,{ef:i.ef, en:v})} />
+                  <ScoreCell v={i.en} onChange={(v)=>update(i.id,{en:v})} />
                   <ScoreCell v={i.ef} onChange={(v)=>update(i.id,{ef:v})} />
                   <Td><span className="mono" style={{ fontWeight:600, color:C.accent }}>{priority(i).toFixed(1)}</span></Td>
                   <Td><span className="mono">{fmt(i.cost)}</span></Td>
@@ -608,9 +610,13 @@ function Intro({ onEnter }) {
           weigh it against effort, then set a budget to see what's funded and how it phases across five years.
         </p>
 
-        <div className="in-mono" style={{ display:"inline-block", background:C.white, border:`1px solid ${C.line}`, borderRadius:10, padding:"14px 20px", fontSize:14, color:C.slate, marginBottom:30 }}>
+        <div className="in-mono" style={{ display:"inline-block", background:C.white, border:`1px solid ${C.line}`, borderRadius:10, padding:"14px 20px", fontSize:14, color:C.slate, marginBottom:16 }}>
           Priority = <span style={{ color:C.accent, fontWeight:600 }}>(Impact + Time-criticality + Enablement)</span> ÷ <span style={{ color:C.red, fontWeight:600 }}>Effort</span>
         </div>
+
+        <p style={{ fontSize:13.5, color:C.slate, lineHeight:1.6, margin:"0 auto 30px", maxWidth:420 }}>
+          A transparent way to prioritise, fund and phase a portfolio of change.
+        </p>
 
         <div>
           <button onClick={onEnter} className="in-cta"
