@@ -109,11 +109,12 @@ Each initiative object:
 - `si/tc/en/ef` are integers 1–5.
 
 `YEARS = ["2026/27","2027/28","2028/29","2029/30","2030/31"]` (5-year programme).
-Seed is a 12-initiative INDICATIVE university portfolio (Student Records, Online Admissions, VLE,
+Seed is a 13-initiative INDICATIVE university portfolio (Student Records, Online Admissions, VLE,
 Research Computing/Data, HR & Finance, IAM, Student App, Timetabling, Network & Wifi, Data Warehouse,
-Cyber Security). Total demand ~£42m against the £30m default budget, so the funding line always bites
-and trade-offs are visible on load. Clearly illustrative, not a real Bath plan (intro/footer says so).
-Tuned for the Bath Digital Portfolio Director interview demo (22 Jun 2026).
+Cyber Security, Managed Service Transition (Infosys)). Total demand ~£43.6m against the £30m default
+budget, so the funding line always bites and trade-offs are visible on load. The Infosys line nods to
+the Bath role's named third-party partner. Clearly illustrative, not a real Bath plan (intro/footer
+says so). Tuned for the Bath Digital Portfolio Director interview demo (22 Jun 2026).
 
 ---
 

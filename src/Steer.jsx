@@ -64,6 +64,7 @@ const SEED = [
   { id:10, name:"Network & Wifi Upgrade", ws:"Infrastructure",                    owner:"D. Patel",   si:4, tc:4, en:5, ef:4, cost:4.0, status:"in-progress" },
   { id:11, name:"Data Warehouse & Analytics Platform", ws:"Data",                 owner:"R. Singh",   si:4, tc:2, en:4, ef:3, cost:2.5, status:"not-started" },
   { id:12, name:"Cyber Security Uplift", ws:"Infrastructure",                     owner:"S. Owen",    si:4, tc:5, en:2, ef:3, cost:2.4, status:"at-risk" },
+  { id:13, name:"Managed Service Transition (Infosys)", ws:"Infrastructure",       owner:"S. Owen",    si:2, tc:3, en:3, ef:2, cost:1.6, status:"in-progress" },
 ];
 
 const fmt = (m) => "£" + m.toFixed(1) + "m";
@@ -443,7 +444,7 @@ function Method() {
   ];
   return (
     <div>
-      <SectionHead title="Method" desc="How initiatives are prioritised. The model is deliberately simple, transparent and grounded in a recognised framework, so decisions are defensible to an executive board rather than driven by who argues hardest." />
+      <SectionHead title="Method" desc="How initiatives are prioritised. The model is deliberately simple and transparent, built on a proven principle and tuned to fit the portfolio, so decisions are defensible to a board rather than driven by who argues hardest." />
 
       <div className="m-grid" style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:16, marginBottom:20 }}>
         <Card title="Value: why we'd do it">
@@ -462,7 +463,7 @@ function Method() {
           Priority &nbsp;=&nbsp; <span style={{ color:"#5EEAD4" }}>(Impact + Time-criticality + Enablement)</span> &nbsp;÷&nbsp; <span style={{ color:"#FCA5A5" }}>Effort</span>
         </div>
         <p style={{ fontSize:13.5, color:"#CBD5E1", lineHeight:1.7, margin:0, maxWidth:760 }}>
-          This is the logic behind <strong style={{color:C.white}}>Weighted Shortest Job First (WSJF)</strong>, a prioritisation model from scaled Agile that's widely used in large transformation programmes. It favours initiatives that deliver the most value for the least effort, which is exactly what you want when funding is finite. A high-impact, highly-enabling, low-effort initiative ranks above a costly initiative of similar value.
+          The principle is value for effort, the logic behind <strong style={{color:C.white}}>Weighted Shortest Job First (WSJF)</strong> from scaled Agile, proven in large transformation programmes. But the model, its funding line and phasing, and the tool around them, are built rather than taken off the shelf, so the framework fits the portfolio and can be tuned to each organisation rather than the other way round. A high-impact, highly-enabling, low-effort initiative ranks above a costly initiative of similar value.
         </p>
       </div>
 
@@ -484,10 +485,10 @@ function Method() {
 /* ---------- Process / governance ---------- */
 function Process({ setView }) {
   const setup = [
-    ["Discovery (1:1s)",  "Capture every initiative, owner and cost from each sponsor and workstream lead.",         "Add initiatives →", "portfolio"],
-    ["Scoring workshop",  "Score each initiative on value vs effort, together, so definitions are applied consistently.", "Score now →",       "portfolio"],
-    ["ExCo trade-offs",   "Set the budget and agree the funding line. Trade-offs become a conversation, not an argument.", "Open budget →",     "budget"],
-    ["Roadmap review",    "Sequence the funded work across the years, respecting dependencies and capacity.",          "View roadmap →",    "roadmap"],
+    ["Engage and define", "Bring every initiative into one place, each with an owner and a cost, captured one to one so people are honest about what matters.", "Add initiatives →", "portfolio"],
+    ["Prioritise together", "Score each initiative on value versus effort in the open, so the basis is shared and applied consistently.", "Score now →", "portfolio"],
+    ["Fund and phase",    "Set the budget, agree the funding line and sequence the funded work across the years.", "Open budget →", "budget"],
+    ["Govern and adapt",  "Run a regular cadence that keeps the portfolio current as priorities and evidence change.", "View roadmap →", "roadmap"],
   ];
   const cadence = [
     ["Monthly",   "Track delivery status, surface risks and catch slippage early."],
