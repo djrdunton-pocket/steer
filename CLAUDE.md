@@ -113,12 +113,16 @@ Each initiative object:
   the schedule is visibly at risk of the deadline.
 
 `YEARS = ["2026/27","2027/28","2028/29","2029/30","2030/31"]` (5-year programme).
-Seed is a 13-initiative INDICATIVE university portfolio (Student Records, Online Admissions, VLE,
+Seed is a 15-initiative INDICATIVE university portfolio (Student Records, Online Admissions, VLE,
 Research Computing/Data, HR & Finance, IAM, Student App, Timetabling, Network & Wifi, Data Warehouse,
-Cyber Security, Managed Service Transition (Infosys)). Total demand ~£43.6m against the £30m default
-budget, so the funding line always bites and trade-offs are visible on load. The Infosys line nods to
-the Bath role's named third-party partner. Clearly illustrative, not a real Bath plan (intro/footer
-says so). Tuned for the Bath Digital Portfolio Director interview demo (22 Jun 2026).
+Cyber Security, Managed Service Transition (Infosys), Student Success & Learning Analytics, AI &
+Automation Foundations). Total demand ~£35.3m against the £30m default budget, so the funding line
+still bites (Student Records and HR & Finance sit below it on load) without the portfolio looking
+wildly over-committed. The Infosys line nods to the Bath role's named
+third-party partner. Student Success & Learning Analytics and AI & Automation Foundations were added so
+the demo reads as digital ambition (student value + AI), not just system-replacement plumbing (panel
+relevance check). Clearly illustrative, not a real Bath plan (intro/footer says so). Tuned for the Bath
+Digital Portfolio Director interview demo (22 Jun 2026).
 
 ---
 
