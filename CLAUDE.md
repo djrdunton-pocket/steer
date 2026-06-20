@@ -115,11 +115,12 @@ Each initiative object:
   Portfolio table shows "depends on <name>"; when a funded initiative depends on one that is NOT funded
   at the current budget, it shows a red `⚠ depends on … (unfunded)` flag (seeded so Online Admissions
   depends on the unfunded Student Records at £30m — a deliberate on-load demo moment that reacts to the
-  slider). **Resource-clash highlighting (display only):** the Roadmap flags in amber any `owner`
-  committed to two funded initiatives whose active years overlap (e.g. D. Patel across IAM + Network &
-  Wifi; S. Owen across Cyber + the Infosys line). Neither touches the scoring or phasing maths; both
-  surface issues for a human to resolve rather than auto-reshuffling. Owners are tuned so exactly two
-  clean clashes show at the £30m default.
+  slider). **At-risk flagging (display only):** the Roadmap shows an amber `⚠ at risk` flag on any
+  funded initiative that is `at-risk` status or blocked by an unfunded dependency (e.g. Cyber Security;
+  Online Admissions while Student Records is below the line, so it reacts to the slider). `owner` is
+  shown as the informational delivery lead, not as a single named "resource" (an earlier owner-overlap
+  "resource clash" was dropped as unrealistic — every initiative has a team). Neither flag touches the
+  scoring or phasing maths; both surface issues for a human to resolve rather than auto-reshuffling.
 
 `YEARS = ["2026/27","2027/28","2028/29","2029/30","2030/31"]` (5-year programme).
 Seed is a 15-initiative INDICATIVE university portfolio (Student Records, Online Admissions, VLE,

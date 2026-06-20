@@ -300,14 +300,9 @@ function Roadmap({ items, print }) {
   const annualSpend = YEARS.map((_, y) =>
     funded.filter(i => i.startYear === y).reduce((s,i)=>s+i.cost,0)
   );
-  // resource clashes: the same lead committed to two funded initiatives in the same year
-  const actYears = (i) => { const ys=[]; for (let y=i.startYear; y<i.startYear+duration(i); y++) ys.push(y); return ys; };
-  const clash = new Set();
-  funded.forEach((a, ai) => funded.forEach((b, bi) => {
-    if (ai < bi && a.owner && a.owner === b.owner && actYears(a).some(y => actYears(b).includes(y))) {
-      clash.add(a.id); clash.add(b.id);
-    }
-  }));
+  // delivery risk: at-risk status, or funded but blocked by an unfunded dependency
+  const byId = Object.fromEntries(items.map(x => [x.id, x]));
+  const atRisk = (i) => i.status === "at-risk" || (i.dep && byId[i.dep] && !byId[i.dep].funded);
   return (
     <div>
       <SectionHead title="Investment Roadmap" desc="An indicative phasing, not fixed delivery dates: funded work is sequenced by priority, in-flight work sits in year one, and each year stays within budget. Time-critical work is shaded, and any target date shows as a marker on its row." />
@@ -325,8 +320,8 @@ function Roadmap({ items, print }) {
                   <span style={{ display:"inline-block", width:7, height:7, borderRadius:2, background:WORKSTREAMS[i.ws], marginRight:7 }} />
                   {i.name}
                 </div>
-                <div style={{ fontSize:10.5, whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis", color: clash.has(i.id)?C.amber:C.mute, fontWeight: clash.has(i.id)?600:400 }}>
-                  {clash.has(i.id) ? "⚠ "+i.owner+" · resource clash" : i.owner}
+                <div style={{ fontSize:10.5, whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis", color:C.mute }}>
+                  {i.owner}{atRisk(i) && <span style={{ color:C.amber, fontWeight:600 }}> · ⚠ at risk</span>}
                 </div>
               </div>
               {YEARS.map((_, y) => {
@@ -358,7 +353,7 @@ function Roadmap({ items, print }) {
         </div>
       </div>
       <p style={{ fontSize:11.5, color:C.mute, marginTop:10 }}>
-        Diagonal shading marks time-critical work. The amber <span style={{ color:C.amber }}>◆</span> marks a target date; where a bar runs past it, the schedule is at risk of missing that date at the current budget. An amber owner marked <span style={{ color:C.amber }}>⚠ resource clash</span> shows the same lead committed to two funded initiatives in the same year, a clash to resolve.
+        Diagonal shading marks time-critical work. The amber <span style={{ color:C.amber }}>◆</span> marks a target date; where a bar runs past it, the schedule is at risk of missing that date at the current budget. A <span style={{ color:C.amber }}>⚠ at risk</span> flag marks delivery risk, work that is at risk or blocked by an unfunded dependency, surfaced to resolve rather than buried.
       </p>
       <Legend />
     </div>
