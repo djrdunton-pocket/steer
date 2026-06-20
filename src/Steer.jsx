@@ -53,20 +53,20 @@ const YEARS = ["2026/27", "2027/28", "2028/29", "2029/30", "2030/31"];
 
 const SEED = [
   { id:1,  name:"Student Records System Replacement", ws:"Student Systems",       owner:"L. Reid",    si:5, tc:4, en:4, ef:5, cost:5.5, status:"not-started" },
-  { id:2,  name:"Online Admissions & Enrolment", ws:"Student Systems",            owner:"K. Adeyemi", si:4, tc:5, en:3, ef:3, cost:2.5, status:"not-started", due:1 },
+  { id:2,  name:"Online Admissions & Enrolment", ws:"Student Systems",            owner:"K. Adeyemi", si:4, tc:5, en:3, ef:3, cost:2.5, status:"not-started", due:1, dep:1 },
   { id:3,  name:"Virtual Learning Environment Upgrade", ws:"Education Technology", owner:"M. Cole",    si:4, tc:3, en:3, ef:3, cost:2.8, status:"not-started" },
   { id:4,  name:"Research Computing Platform", ws:"Research",                     owner:"A. Frost",   si:4, tc:3, en:4, ef:4, cost:3.2, status:"not-started" },
   { id:5,  name:"Research Data Management", ws:"Research",                        owner:"A. Frost",   si:3, tc:4, en:3, ef:2, cost:1.2, status:"not-started", due:0 },
   { id:6,  name:"HR & Finance System Replacement", ws:"Staff Experience",         owner:"J. Hart",    si:3, tc:2, en:3, ef:5, cost:4.5, status:"not-started" },
   { id:7,  name:"Identity & Access Management", ws:"Infrastructure",              owner:"D. Patel",   si:4, tc:4, en:5, ef:3, cost:1.8, status:"in-progress", due:1 },
-  { id:8,  name:"Student App & Digital Campus", ws:"Student Experience",          owner:"L. Reid",    si:4, tc:3, en:3, ef:3, cost:2.0, status:"not-started" },
+  { id:8,  name:"Student App & Digital Campus", ws:"Student Experience",          owner:"L. Reid",    si:4, tc:3, en:3, ef:3, cost:2.0, status:"not-started", dep:7 },
   { id:9,  name:"Timetabling Modernisation", ws:"Student Experience",            owner:"S. Khan",    si:3, tc:3, en:2, ef:2, cost:1.2, status:"not-started" },
   { id:10, name:"Network & Wifi Upgrade", ws:"Infrastructure",                    owner:"D. Patel",   si:4, tc:4, en:5, ef:4, cost:2.8, status:"in-progress" },
   { id:11, name:"Data Warehouse & Analytics Platform", ws:"Data",                 owner:"R. Singh",   si:4, tc:2, en:4, ef:3, cost:1.8, status:"not-started" },
   { id:12, name:"Cyber Security Uplift", ws:"Infrastructure",                     owner:"S. Owen",    si:4, tc:5, en:2, ef:3, cost:1.8, status:"at-risk", due:0 },
   { id:13, name:"Managed Service Transition (Infosys)", ws:"Infrastructure",       owner:"S. Owen",    si:2, tc:3, en:3, ef:2, cost:1.2, status:"in-progress" },
-  { id:14, name:"Student Success & Learning Analytics", ws:"Student Experience",   owner:"M. Cole",    si:5, tc:3, en:4, ef:3, cost:1.6, status:"not-started" },
-  { id:15, name:"AI & Automation Foundations", ws:"Data",                          owner:"R. Singh",   si:4, tc:2, en:4, ef:3, cost:1.4, status:"not-started" },
+  { id:14, name:"Student Success & Learning Analytics", ws:"Student Experience",   owner:"P. Nadeem",  si:5, tc:3, en:4, ef:3, cost:1.6, status:"not-started", dep:11 },
+  { id:15, name:"AI & Automation Foundations", ws:"Data",                          owner:"T. Walsh",   si:4, tc:2, en:4, ef:3, cost:1.4, status:"not-started", dep:11 },
 ];
 
 const fmt = (m) => "£" + m.toFixed(1) + "m";
@@ -226,6 +226,7 @@ export default function Steer() {
 
 /* ---------- Portfolio table ---------- */
 function Portfolio({ items, update, remove, setEditing, setAdding }) {
+  const byId = Object.fromEntries(items.map(x => [x.id, x]));
   return (
     <div>
       <SectionHead title="Portfolio" desc="Every initiative scored on value (strategic impact, time-criticality, enablement) against effort, then ranked by value-for-effort. The funding line follows.">
@@ -253,7 +254,16 @@ function Portfolio({ items, update, remove, setEditing, setAdding }) {
               {items.map((i, idx) => (
                 <tr key={i.id} className="row" style={{ borderTop:`1px solid ${C.line}`, opacity: i.funded?1:0.5 }}>
                   <Td><span className="mono" style={{ color:C.mute }}>{idx+1}</span></Td>
-                  <Td><span style={{ fontWeight:600 }}>{i.name}</span><div style={{ fontSize:11, color:C.mute }}>{i.owner}</div></Td>
+                  <Td>
+                    <span style={{ fontWeight:600 }}>{i.name}</span>
+                    <div style={{ fontSize:11, color:C.mute }}>{i.owner}</div>
+                    {i.dep && byId[i.dep] && (() => {
+                      const broken = i.funded && !byId[i.dep].funded;
+                      return <div style={{ fontSize:10.5, marginTop:2, fontWeight: broken?600:400, color: broken?C.red:C.mute }}>
+                        {broken ? "⚠ depends on " : "depends on "}{byId[i.dep].name}{broken ? " (unfunded)" : ""}
+                      </div>;
+                    })()}
+                  </Td>
                   <Td><Pill color={WORKSTREAMS[i.ws]}>{i.ws}</Pill></Td>
                   <ScoreCell v={i.si} onChange={(v)=>update(i.id,{si:v})} />
                   <ScoreCell v={i.tc} onChange={(v)=>update(i.id,{tc:v})} />
@@ -278,7 +288,7 @@ function Portfolio({ items, update, remove, setEditing, setAdding }) {
         </div>
       </div>
       <p style={{ fontSize:12, color:C.mute, marginTop:10 }}>
-        Dimmed rows fall below the funding line at the current budget. Tap any score to change it and the ranking, roadmap and budget update live.
+        Dimmed rows fall below the funding line at the current budget. A red <span style={{ color:C.red }}>⚠ depends on</span> flag means a funded initiative relies on one that is not funded, a dependency to resolve before it can go ahead. Tap any score to change it and the ranking, roadmap and budget update live.
       </p>
     </div>
   );
@@ -290,6 +300,14 @@ function Roadmap({ items, print }) {
   const annualSpend = YEARS.map((_, y) =>
     funded.filter(i => i.startYear === y).reduce((s,i)=>s+i.cost,0)
   );
+  // resource clashes: the same lead committed to two funded initiatives in the same year
+  const actYears = (i) => { const ys=[]; for (let y=i.startYear; y<i.startYear+duration(i); y++) ys.push(y); return ys; };
+  const clash = new Set();
+  funded.forEach((a, ai) => funded.forEach((b, bi) => {
+    if (ai < bi && a.owner && a.owner === b.owner && actYears(a).some(y => actYears(b).includes(y))) {
+      clash.add(a.id); clash.add(b.id);
+    }
+  }));
   return (
     <div>
       <SectionHead title="Investment Roadmap" desc="An indicative phasing, not fixed delivery dates: funded work is sequenced by priority, in-flight work sits in year one, and each year stays within budget. Time-critical work is shaded, and any target date shows as a marker on its row." />
@@ -302,9 +320,14 @@ function Roadmap({ items, print }) {
           </div>
           {funded.map((i) => (
             <div key={i.id} style={{ display:"grid", gridTemplateColumns:"260px repeat(5,1fr)", gap:8, alignItems:"center", marginBottom:8 }}>
-              <div style={{ fontSize:12.5, fontWeight:500, whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis" }}>
-                <span style={{ display:"inline-block", width:7, height:7, borderRadius:2, background:WORKSTREAMS[i.ws], marginRight:7 }} />
-                {i.name}
+              <div style={{ minWidth:0 }}>
+                <div style={{ fontSize:12.5, fontWeight:500, whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis" }}>
+                  <span style={{ display:"inline-block", width:7, height:7, borderRadius:2, background:WORKSTREAMS[i.ws], marginRight:7 }} />
+                  {i.name}
+                </div>
+                <div style={{ fontSize:10.5, whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis", color: clash.has(i.id)?C.amber:C.mute, fontWeight: clash.has(i.id)?600:400 }}>
+                  {clash.has(i.id) ? "⚠ "+i.owner+" · resource clash" : i.owner}
+                </div>
               </div>
               {YEARS.map((_, y) => {
                 const active = y >= i.startYear && y < i.startYear + duration(i);
@@ -335,7 +358,7 @@ function Roadmap({ items, print }) {
         </div>
       </div>
       <p style={{ fontSize:11.5, color:C.mute, marginTop:10 }}>
-        Diagonal shading marks time-critical work. The amber <span style={{ color:C.amber }}>◆</span> marks a target date; where a bar runs past it, the schedule is at risk of missing that date at the current budget.
+        Diagonal shading marks time-critical work. The amber <span style={{ color:C.amber }}>◆</span> marks a target date; where a bar runs past it, the schedule is at risk of missing that date at the current budget. An amber owner marked <span style={{ color:C.amber }}>⚠ resource clash</span> shows the same lead committed to two funded initiatives in the same year, a clash to resolve.
       </p>
       <Legend />
     </div>

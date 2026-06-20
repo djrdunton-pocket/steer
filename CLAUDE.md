@@ -101,7 +101,7 @@ treat it as a core-logic change: call it out explicitly and get sign-off before 
 
 Each initiative object:
 ```js
-{ id, name, ws, owner, si, tc, en, ef, cost, status, due }
+{ id, name, ws, owner, si, tc, en, ef, cost, status, due, dep }
 ```
 - `ws` (workstream) ∈ keys of `WORKSTREAMS` (below).
 - `cost` in £m (float).
@@ -111,6 +111,15 @@ Each initiative object:
   amber `◆` marker shows the target year; time-critical work (`due` set, or `tc >= 4`, via `urgent()`)
   gets diagonal hatch shading. Display only: phasing is unchanged, so where a bar runs past its marker
   the schedule is visibly at risk of the deadline.
+- `dep` (optional) = `id` of a prerequisite initiative. **Dependency tracking (display only):** the
+  Portfolio table shows "depends on <name>"; when a funded initiative depends on one that is NOT funded
+  at the current budget, it shows a red `⚠ depends on … (unfunded)` flag (seeded so Online Admissions
+  depends on the unfunded Student Records at £30m — a deliberate on-load demo moment that reacts to the
+  slider). **Resource-clash highlighting (display only):** the Roadmap flags in amber any `owner`
+  committed to two funded initiatives whose active years overlap (e.g. D. Patel across IAM + Network &
+  Wifi; S. Owen across Cyber + the Infosys line). Neither touches the scoring or phasing maths; both
+  surface issues for a human to resolve rather than auto-reshuffling. Owners are tuned so exactly two
+  clean clashes show at the £30m default.
 
 `YEARS = ["2026/27","2027/28","2028/29","2029/30","2030/31"]` (5-year programme).
 Seed is a 15-initiative INDICATIVE university portfolio (Student Records, Online Admissions, VLE,
