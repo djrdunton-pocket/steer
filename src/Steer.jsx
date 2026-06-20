@@ -327,16 +327,20 @@ function Roadmap({ items, print }) {
               {YEARS.map((_, y) => {
                 const active = y >= i.startYear && y < i.startYear + duration(i);
                 const isStart = y === i.startYear;
+                const isEnd = y === i.startYear + duration(i) - 1;
+                const nextActive = active && (y + 1) < i.startYear + duration(i);
                 return (
-                  <div key={y} style={{ height:30, borderRadius:6, position:"relative",
-                    background: active ? WORKSTREAMS[i.ws] : "transparent",
-                    opacity: active ? (i.status==="at-risk"?0.55:0.9) : 1,
-                    border: "none",
-                    backgroundImage: active && urgent(i) ? "repeating-linear-gradient(45deg, rgba(255,255,255,0.30) 0, rgba(255,255,255,0.30) 3px, transparent 3px, transparent 7px)" : "none" }}>
-                    {isStart && <span className="mono" style={{ position:"absolute", inset:0, display:"flex", alignItems:"center", justifyContent:"center", color:C.white, fontSize:11, fontWeight:600 }}>{fmt(i.cost)}</span>}
+                  <div key={y} style={{ height:30, position:"relative" }}>
+                    {active && <div style={{ position:"absolute", top:0, bottom:0, left:0, right: nextActive ? -8 : 0,
+                      background: WORKSTREAMS[i.ws],
+                      opacity: i.status==="at-risk"?0.55:0.9,
+                      borderTopLeftRadius: isStart?6:0, borderBottomLeftRadius: isStart?6:0,
+                      borderTopRightRadius: isEnd?6:0, borderBottomRightRadius: isEnd?6:0,
+                      backgroundImage: urgent(i) ? "repeating-linear-gradient(45deg, rgba(255,255,255,0.30) 0, rgba(255,255,255,0.30) 3px, transparent 3px, transparent 7px)" : "none" }} />}
+                    {isStart && <span className="mono" style={{ position:"absolute", inset:0, display:"flex", alignItems:"center", justifyContent:"center", color:C.white, fontSize:11, fontWeight:600, zIndex:1 }}>{fmt(i.cost)}</span>}
                     {y === i.due && <>
-                      <span style={{ position:"absolute", top:-5, bottom:-5, right:-1, borderRight:`2px solid ${C.amber}` }} />
-                      <span style={{ position:"absolute", top:-10, right:-6, fontSize:10, lineHeight:1, color:C.amber }}>◆</span>
+                      <span style={{ position:"absolute", top:-5, bottom:-5, right:-1, borderRight:`2px solid ${C.amber}`, zIndex:2 }} />
+                      <span style={{ position:"absolute", top:-10, right:-6, fontSize:10, lineHeight:1, color:C.amber, zIndex:2 }}>◆</span>
                     </>}
                   </div>
                 );
