@@ -158,7 +158,7 @@ export default function Steer() {
         </div>
         <div style={{ display:"flex", alignItems:"center", gap:8, flexShrink:0 }}>
           <div className="tabs" style={{ display:"flex", gap:4, overflowX:"auto", maxWidth: isMobile?"62vw":"none" }}>
-            {[["portfolio","Portfolio"],["roadmap","Roadmap"],["onepage","Summary"],["budget", isMobile?"Budget":"Budget & Trade-offs"],["method","Method"],["process","Process"]].map(([k,l]) => (
+            {[["portfolio","Portfolio"],["budget", isMobile?"Budget":"Budget & Trade-offs"],["roadmap","Roadmap"],["onepage","Summary"],["method","Method"],["process","Process"]].map(([k,l]) => (
               <button key={k} className="tab" onClick={()=>setView(k)}
                 style={{ border:"none", borderBottom: view===k?`2px solid ${C.accent}`:"2px solid transparent",
                   background:"transparent", color: view===k?C.ink:C.slate,

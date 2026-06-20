@@ -141,7 +141,8 @@ Digital Portfolio Director interview demo (22 Jun 2026).
 - **Logo:** compass SVG + "Steer" wordmark.
 
 ### Views (6 tabs)
-Portfolio · Roadmap · Summary · Budget & Trade-offs · Method · Process.
+Portfolio · Budget & Trade-offs · Roadmap · Summary · Method · Process. (Order chosen so the live demo
+sweeps left-to-right: Portfolio, then set the budget/funding line, then the resulting Roadmap.)
 Flow: Intro splash (single "Enter" button) → App. The current build has NO marketing landing page and
 NO login screen (both were removed in favour of a clean demo entry). Process tab covers the governance
 cadence (setup sequence + monthly/quarterly/annual rhythm).
