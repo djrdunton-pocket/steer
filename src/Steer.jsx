@@ -311,7 +311,7 @@ function Roadmap({ items, print }) {
                   <div key={y} style={{ height:30, borderRadius:6, position:"relative",
                     background: active ? WORKSTREAMS[i.ws] : "transparent",
                     opacity: active ? (i.status==="at-risk"?0.55:0.9) : 1,
-                    border: active ? "none" : `1px dashed ${C.line}`,
+                    border: "none",
                     backgroundImage: active && urgent(i) ? "repeating-linear-gradient(45deg, rgba(255,255,255,0.30) 0, rgba(255,255,255,0.30) 3px, transparent 3px, transparent 7px)" : "none" }}>
                     {isStart && <span className="mono" style={{ position:"absolute", inset:0, display:"flex", alignItems:"center", justifyContent:"center", color:C.white, fontSize:11, fontWeight:600 }}>{fmt(i.cost)}</span>}
                     {y === i.due && <>
