@@ -101,12 +101,16 @@ treat it as a core-logic change: call it out explicitly and get sign-off before 
 
 Each initiative object:
 ```js
-{ id, name, ws, owner, si, tc, en, ef, cost, status }
+{ id, name, ws, owner, si, tc, en, ef, cost, status, due }
 ```
 - `ws` (workstream) ∈ keys of `WORKSTREAMS` (below).
 - `cost` in £m (float).
 - `status` ∈ `not-started | in-progress | at-risk | complete`.
 - `si/tc/en/ef` are integers 1–5.
+- `due` (optional) = target-date year index (0–4 into `YEARS`), or null/absent. On the Roadmap, an
+  amber `◆` marker shows the target year; time-critical work (`due` set, or `tc >= 4`, via `urgent()`)
+  gets diagonal hatch shading. Display only: phasing is unchanged, so where a bar runs past its marker
+  the schedule is visibly at risk of the deadline.
 
 `YEARS = ["2026/27","2027/28","2028/29","2029/30","2030/31"]` (5-year programme).
 Seed is a 13-initiative INDICATIVE university portfolio (Student Records, Online Admissions, VLE,

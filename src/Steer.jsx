@@ -53,17 +53,17 @@ const YEARS = ["2026/27", "2027/28", "2028/29", "2029/30", "2030/31"];
 
 const SEED = [
   { id:1,  name:"Student Records System Replacement", ws:"Student Systems",       owner:"L. Reid",    si:5, tc:4, en:4, ef:5, cost:7.5, status:"not-started" },
-  { id:2,  name:"Online Admissions & Enrolment", ws:"Student Systems",            owner:"K. Adeyemi", si:4, tc:5, en:3, ef:3, cost:3.0, status:"not-started" },
+  { id:2,  name:"Online Admissions & Enrolment", ws:"Student Systems",            owner:"K. Adeyemi", si:4, tc:5, en:3, ef:3, cost:3.0, status:"not-started", due:1 },
   { id:3,  name:"Virtual Learning Environment Upgrade", ws:"Education Technology", owner:"M. Cole",    si:4, tc:3, en:3, ef:3, cost:3.5, status:"not-started" },
   { id:4,  name:"Research Computing Platform", ws:"Research",                     owner:"A. Frost",   si:4, tc:3, en:4, ef:4, cost:4.5, status:"not-started" },
-  { id:5,  name:"Research Data Management", ws:"Research",                        owner:"A. Frost",   si:3, tc:4, en:3, ef:2, cost:1.5, status:"not-started" },
+  { id:5,  name:"Research Data Management", ws:"Research",                        owner:"A. Frost",   si:3, tc:4, en:3, ef:2, cost:1.5, status:"not-started", due:0 },
   { id:6,  name:"HR & Finance System Replacement", ws:"Staff Experience",         owner:"J. Hart",    si:3, tc:2, en:3, ef:5, cost:6.5, status:"not-started" },
-  { id:7,  name:"Identity & Access Management", ws:"Infrastructure",              owner:"D. Patel",   si:4, tc:4, en:5, ef:3, cost:2.2, status:"in-progress" },
+  { id:7,  name:"Identity & Access Management", ws:"Infrastructure",              owner:"D. Patel",   si:4, tc:4, en:5, ef:3, cost:2.2, status:"in-progress", due:1 },
   { id:8,  name:"Student App & Digital Campus", ws:"Student Experience",          owner:"L. Reid",    si:4, tc:3, en:3, ef:3, cost:2.8, status:"not-started" },
   { id:9,  name:"Timetabling Modernisation", ws:"Student Experience",            owner:"S. Khan",    si:3, tc:3, en:2, ef:2, cost:1.6, status:"not-started" },
   { id:10, name:"Network & Wifi Upgrade", ws:"Infrastructure",                    owner:"D. Patel",   si:4, tc:4, en:5, ef:4, cost:4.0, status:"in-progress" },
   { id:11, name:"Data Warehouse & Analytics Platform", ws:"Data",                 owner:"R. Singh",   si:4, tc:2, en:4, ef:3, cost:2.5, status:"not-started" },
-  { id:12, name:"Cyber Security Uplift", ws:"Infrastructure",                     owner:"S. Owen",    si:4, tc:5, en:2, ef:3, cost:2.4, status:"at-risk" },
+  { id:12, name:"Cyber Security Uplift", ws:"Infrastructure",                     owner:"S. Owen",    si:4, tc:5, en:2, ef:3, cost:2.4, status:"at-risk", due:0 },
   { id:13, name:"Managed Service Transition (Infosys)", ws:"Infrastructure",       owner:"S. Owen",    si:2, tc:3, en:3, ef:2, cost:1.6, status:"in-progress" },
 ];
 
@@ -71,6 +71,7 @@ const fmt = (m) => "£" + m.toFixed(1) + "m";
 const value = (i) => i.si + i.tc + i.en;             // 3–15
 const priority = (i) => value(i) / i.ef;              // WSJF-style: value per unit effort
 const duration = (i) => (i.ef >= 5 ? 3 : i.ef >= 3 ? 2 : 1);
+const urgent = (i) => i.due != null || i.tc >= 4;   // time-critical, or has a target date
 
 export default function Steer() {
   const [stage, setStage] = useState("intro"); // intro | app
@@ -289,7 +290,7 @@ function Roadmap({ items, print }) {
   );
   return (
     <div>
-      <SectionHead title="Investment Roadmap" desc="Prioritised initiatives phased across the five-year programme, sequenced so enablers land first and annual spend stays within the budget." />
+      <SectionHead title="Investment Roadmap" desc="An indicative phasing, not fixed delivery dates: funded work is sequenced by priority, in-flight work sits in year one, and each year stays within budget. Time-critical work is shaded, and any target date shows as a marker on its row." />
       <div style={{ background:C.white, border:`1px solid ${C.line}`, borderRadius:12, padding:"20px 24px", overflowX:"auto" }}>
         <div style={{ minWidth:760 }}>
           {/* year header */}
@@ -310,8 +311,13 @@ function Roadmap({ items, print }) {
                   <div key={y} style={{ height:30, borderRadius:6, position:"relative",
                     background: active ? WORKSTREAMS[i.ws] : "transparent",
                     opacity: active ? (i.status==="at-risk"?0.55:0.9) : 1,
-                    border: active ? "none" : `1px dashed ${C.line}` }}>
+                    border: active ? "none" : `1px dashed ${C.line}`,
+                    backgroundImage: active && urgent(i) ? "repeating-linear-gradient(45deg, rgba(255,255,255,0.30) 0, rgba(255,255,255,0.30) 3px, transparent 3px, transparent 7px)" : "none" }}>
                     {isStart && <span className="mono" style={{ position:"absolute", inset:0, display:"flex", alignItems:"center", justifyContent:"center", color:C.white, fontSize:11, fontWeight:600 }}>{fmt(i.cost)}</span>}
+                    {y === i.due && <>
+                      <span style={{ position:"absolute", top:-5, bottom:-5, right:-1, borderRight:`2px solid ${C.amber}` }} />
+                      <span style={{ position:"absolute", top:-10, right:-6, fontSize:10, lineHeight:1, color:C.amber }}>◆</span>
+                    </>}
                   </div>
                 );
               })}
@@ -326,6 +332,9 @@ function Roadmap({ items, print }) {
           </div>
         </div>
       </div>
+      <p style={{ fontSize:11.5, color:C.mute, marginTop:10 }}>
+        Diagonal shading marks time-critical work. The amber <span style={{ color:C.amber }}>◆</span> marks a target date; where a bar runs past it, the schedule is at risk of missing that date at the current budget.
+      </p>
       <Legend />
     </div>
   );
@@ -575,7 +584,15 @@ function Editor({ item, onSave, onClose }) {
             <input type="range" min={1} max={5} value={f[k]} onChange={e=>set(k,parseInt(e.target.value))} style={{ width:"100%", accentColor:C.accent }} />
           </div>
         ))}
-        <Field label="Cost (£m)"><input type="number" step={0.1} min={0} value={f.cost} onChange={e=>set("cost",parseFloat(e.target.value)||0)} style={inp} /></Field>
+        <div style={{ display:"flex", gap:12 }}>
+          <Field label="Cost (£m)" flex><input type="number" step={0.1} min={0} value={f.cost} onChange={e=>set("cost",parseFloat(e.target.value)||0)} style={inp} /></Field>
+          <Field label="Target year (optional)" flex>
+            <select value={f.due ?? ""} onChange={e=>set("due", e.target.value===""?null:parseInt(e.target.value))} style={inp}>
+              <option value="">None</option>
+              {YEARS.map((y,idx)=><option key={y} value={idx}>{y}</option>)}
+            </select>
+          </Field>
+        </div>
         <div style={{ display:"flex", gap:10, marginTop:20, justifyContent:"flex-end" }}>
           <button onClick={onClose} style={{ border:`1px solid ${C.line}`, background:C.white, color:C.slate, padding:"9px 16px", borderRadius:8, fontSize:13, fontWeight:500 }}>Cancel</button>
           <button onClick={()=>f.name&&onSave(f)} style={{ border:"none", background:C.accent, color:C.white, padding:"9px 18px", borderRadius:8, fontSize:13, fontWeight:600 }}>Save</button>
