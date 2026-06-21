@@ -297,8 +297,11 @@ function Portfolio({ items, update, remove, setEditing, setAdding }) {
 /* ---------- Roadmap ---------- */
 function Roadmap({ items, print }) {
   const funded = items.filter(i => i.startYear !== null);
+  // spread each initiative's cost evenly across the years its bar actually spans on the chart
+  const span = (i) => Math.min(i.startYear + duration(i), YEARS.length) - i.startYear;
+  const perYear = (i) => i.cost / span(i);
   const annualSpend = YEARS.map((_, y) =>
-    funded.filter(i => i.startYear === y).reduce((s,i)=>s+i.cost,0)
+    funded.filter(i => y >= i.startYear && y < i.startYear + duration(i)).reduce((s,i)=>s+perYear(i),0)
   );
   // delivery risk: at-risk status, or funded but blocked by an unfunded dependency
   const byId = Object.fromEntries(items.map(x => [x.id, x]));
@@ -337,7 +340,7 @@ function Roadmap({ items, print }) {
                       borderTopLeftRadius: isStart?6:0, borderBottomLeftRadius: isStart?6:0,
                       borderTopRightRadius: isEnd?6:0, borderBottomRightRadius: isEnd?6:0,
                       backgroundImage: urgent(i) ? "repeating-linear-gradient(45deg, rgba(255,255,255,0.30) 0, rgba(255,255,255,0.30) 3px, transparent 3px, transparent 7px)" : "none" }} />}
-                    {isStart && <span className="mono" style={{ position:"absolute", inset:0, display:"flex", alignItems:"center", justifyContent:"center", color:C.white, fontSize:11, fontWeight:600, zIndex:1 }}>{fmt(i.cost)}</span>}
+                    {active && <span className="mono" style={{ position:"absolute", inset:0, display:"flex", alignItems:"center", justifyContent:"center", color:C.white, fontSize:11, fontWeight:600, zIndex:1 }}>{fmt(perYear(i))}</span>}
                     {y === i.due && <>
                       <span style={{ position:"absolute", top:-5, bottom:-5, right:-1, borderRight:`2px solid ${C.amber}`, zIndex:2 }} />
                       <span style={{ position:"absolute", top:-10, right:-6, fontSize:10, lineHeight:1, color:C.amber, zIndex:2 }}>◆</span>
@@ -433,10 +436,19 @@ function OnePage({ items, envelope, allocated, fundedTotal, isMobile, onPrint, p
 
 /* ---------- Budget & Trade-offs ---------- */
 function Budget({ items, envelope }) {
+  const th = { fontSize:11, fontWeight:700, color:C.mute, textTransform:"uppercase", letterSpacing:"0.06em" };
   return (
     <div>
       <SectionHead title="Budget & Trade-offs" desc="Initiatives ranked by priority, accumulating cost against the budget. Everything below the line is unfunded at this level. Move the budget slider to see what changes." />
       <div style={{ background:C.white, border:`1px solid ${C.line}`, borderRadius:12, overflow:"hidden" }}>
+        <div style={{ display:"flex", alignItems:"center", gap:12, padding:"9px 18px", borderBottom:`1px solid ${C.line}`, background:C.bg }}>
+          <span style={{ width:20 }} />
+          <span style={{ width:8 }} />
+          <span style={{ flex:1, ...th }}>Initiative</span>
+          <span style={{ width:92, ...th }}>Status</span>
+          <span style={{ width:50, textAlign:"right", ...th }}>Cost</span>
+          <span style={{ width:62, textAlign:"right", ...th }}>Running total</span>
+        </div>
         {items.map((i, idx) => {
           const crossed = idx>0 && items[idx-1].funded && !i.funded;
           return (
@@ -451,7 +463,7 @@ function Budget({ items, envelope }) {
                 <span className="mono" style={{ color:C.mute, fontSize:12, width:20 }}>{idx+1}</span>
                 <span style={{ width:8, height:8, borderRadius:2, background:WORKSTREAMS[i.ws], flexShrink:0 }} />
                 <span style={{ fontSize:13, fontWeight:500, flex:1 }}>{i.name}</span>
-                <Pill color={i.funded?C.accent:C.mute}>{i.funded?"Funded":"Below line"}</Pill>
+                <span style={{ width:92, flexShrink:0 }}><Pill color={i.funded?C.accent:C.mute}>{i.funded?"Funded":"Below line"}</Pill></span>
                 <span className="mono" style={{ fontSize:12, color:C.slate, width:50, textAlign:"right" }}>{fmt(i.cost)}</span>
                 <span className="mono" style={{ fontSize:12, color:i.funded?C.ink:C.mute, width:62, textAlign:"right" }}>{fmt(i.cum)}</span>
               </div>
